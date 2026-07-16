@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "mspOfferName": {
+      "value": "SHIERTECH — Copilot spend (Cost Management Reader)"
+    },
+    "mspOfferDescription": {
+      "value": "SHIERTECH — Copilot spend (Cost Management Reader)"
+    },
+    "spObjectId": {
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "staffGroupObjectIds": {
+      "value": []
+    }
+  }
+}

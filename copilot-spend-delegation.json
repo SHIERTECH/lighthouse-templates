@@ -1,0 +1,96 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "SHIERTECH Azure Lighthouse delegation template. Grants SHIERTECH standing, revocable, READ-ONLY cost access (Cost Management Reader) to a client subscription via Azure delegated resource management. No write roles are ever requested. See scripts/lighthouse/README.md for deploy/revoke instructions and the tenant-context design note for issue #22 (Copilot PAYG spend ingest)."
+  },
+  "parameters": {
+    "mspOfferName": {
+      "type": "string",
+      "defaultValue": "SHIERTECH — Copilot spend (Cost Management Reader)",
+      "metadata": {
+        "description": "Name of the offer, shown to the client in Azure Portal > Service providers. Must be unique per subscription if you ever deploy more than one SHIERTECH offer to the same subscription."
+      }
+    },
+    "mspOfferDescription": {
+      "type": "string",
+      "defaultValue": "SHIERTECH — Copilot spend (Cost Management Reader)",
+      "metadata": {
+        "description": "Description of the offer, shown to the client in Azure Portal > Service providers."
+      }
+    },
+    "spObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "OBJECT id (not app id) of the SHIERTECH service principal, as it exists in the SHIERTECH home tenant. Lighthouse authorizations require the principal's object id, which differs per home tenant from the application (client) id. Get it by running, in the SHIERTECH tenant: az ad sp show --id be5e3fd4-58fc-4190-aafa-8d34cfec15b3 --query id -o tsv"
+      }
+    },
+    "staffGroupObjectIds": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Optional list of SHIERTECH Microsoft Entra security-group object ids (from the SHIERTECH home tenant) to grant Reader (portal visibility only, no cost data beyond what Reader exposes) on the delegated subscription. Leave empty ([]) to skip this authorization entirely. The role for every entry in this list is fixed to Reader by this template — it cannot be overridden via parameters, to keep the delegation read-only."
+      }
+    }
+  },
+  "variables": {
+    "mspRegistrationName": "[guid(parameters('mspOfferName'))]",
+    "mspAssignmentName": "[guid(parameters('mspOfferName'))]",
+    "managedByTenantId": "307f1f5d-5f85-445a-bd23-d8776898042b",
+    "costManagementReaderRoleDefinitionId": "72fafb9e-0641-4937-9268-a91bfd8191a3",
+    "readerRoleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "copy": [
+      {
+        "name": "staffAuthorizations",
+        "count": "[length(parameters('staffGroupObjectIds'))]",
+        "input": {
+          "principalId": "[parameters('staffGroupObjectIds')[copyIndex('staffAuthorizations')]]",
+          "principalIdDisplayName": "SHIERTECH staff (Reader)",
+          "roleDefinitionId": "[variables('readerRoleDefinitionId')]"
+        }
+      }
+    ],
+    "baseAuthorizations": [
+      {
+        "principalId": "[parameters('spObjectId')]",
+        "principalIdDisplayName": "SHIERTECH — Copilot spend (Cost Management Reader)",
+        "roleDefinitionId": "[variables('costManagementReaderRoleDefinitionId')]"
+      }
+    ],
+    "authorizations": "[concat(variables('baseAuthorizations'), variables('staffAuthorizations'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedServices/registrationDefinitions",
+      "apiVersion": "2022-10-01",
+      "name": "[variables('mspRegistrationName')]",
+      "properties": {
+        "registrationDefinitionName": "[parameters('mspOfferName')]",
+        "description": "[parameters('mspOfferDescription')]",
+        "managedByTenantId": "[variables('managedByTenantId')]",
+        "authorizations": "[variables('authorizations')]"
+      }
+    },
+    {
+      "type": "Microsoft.ManagedServices/registrationAssignments",
+      "apiVersion": "2022-10-01",
+      "name": "[variables('mspAssignmentName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+      ],
+      "properties": {
+        "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+      }
+    }
+  ],
+  "outputs": {
+    "mspOfferName": {
+      "type": "string",
+      "value": "[parameters('mspOfferName')]"
+    },
+    "authorizations": {
+      "type": "array",
+      "value": "[variables('authorizations')]"
+    }
+  }
+}
