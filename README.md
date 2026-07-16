@@ -11,6 +11,8 @@ Grants SHIERTECH **Cost Management Reader** (read-only cost/billing data — no 
 
 ### Deploy (one click)
 
+> **Note:** deploy this while signed into **your own organization's** Azure tenant, on your subscription. Deploying it inside the SHIERTECH tenant fails by design with `InvalidRegistrationDefinitionCreateRequest` ("not allowed to use ... as ManagedByTenantId") — Azure Lighthouse does not allow a tenant to delegate to itself.
+
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FSHIERTECH%2Flighthouse-templates%2Fmain%2Fcopilot-spend-delegation.json)
 
 Sign in with an account that has **Owner** on the subscription, pick the subscription, and use `spObjectId` = `d22e0264-963f-4a12-a221-616d61a9f3ab` (SHIERTECH service principal — same value for every client). Leave `staffGroupObjectIds` empty unless SHIERTECH asks otherwise.
