@@ -7,14 +7,14 @@
   "parameters": {
     "mspOfferName": {
       "type": "string",
-      "defaultValue": "SHIERTECH — Copilot spend (Cost Management Reader)",
+      "defaultValue": "SHIERTECH \u2014 Copilot spend (Cost Management Reader)",
       "metadata": {
         "description": "Name of the offer, shown to the client in Azure Portal > Service providers. Must be unique per subscription if you ever deploy more than one SHIERTECH offer to the same subscription."
       }
     },
     "mspOfferDescription": {
       "type": "string",
-      "defaultValue": "SHIERTECH — Copilot spend (Cost Management Reader)",
+      "defaultValue": "SHIERTECH \u2014 Copilot spend (Cost Management Reader)",
       "metadata": {
         "description": "Description of the offer, shown to the client in Azure Portal > Service providers."
       }
@@ -22,14 +22,15 @@
     "spObjectId": {
       "type": "string",
       "metadata": {
-        "description": "OBJECT id (not app id) of the SHIERTECH service principal, as it exists in the SHIERTECH home tenant. Lighthouse authorizations require the principal's object id, which differs per home tenant from the application (client) id. Get it by running, in the SHIERTECH tenant: az ad sp show --id be5e3fd4-58fc-4190-aafa-8d34cfec15b3 --query id -o tsv"
-      }
+        "description": "OBJECT id (not app id) of the SHIERTECH service principal, as it exists in the SHIERTECH home tenant. Lighthouse authorizations require the principal's object id, which differs per home tenant from the application (client) id. Get it by running, in the SHIERTECH tenant: az ad sp show --id be5e3fd4-58fc-4190-aafa-8d34cfec15b3 --query id -o tsv. Prefilled with the SHIERTECH service principal object id \u2014 do not change unless SHIERTECH instructs otherwise."
+      },
+      "defaultValue": "d22e0264-963f-4a12-a221-616d61a9f3ab"
     },
     "staffGroupObjectIds": {
       "type": "array",
       "defaultValue": [],
       "metadata": {
-        "description": "Optional list of SHIERTECH Microsoft Entra security-group object ids (from the SHIERTECH home tenant) to grant Reader (portal visibility only, no cost data beyond what Reader exposes) on the delegated subscription. Leave empty ([]) to skip this authorization entirely. The role for every entry in this list is fixed to Reader by this template — it cannot be overridden via parameters, to keep the delegation read-only."
+        "description": "Optional list of SHIERTECH Microsoft Entra security-group object ids (from the SHIERTECH home tenant) to grant Reader (portal visibility only, no cost data beyond what Reader exposes) on the delegated subscription. Leave empty ([]) to skip this authorization entirely. The role for every entry in this list is fixed to Reader by this template \u2014 it cannot be overridden via parameters, to keep the delegation read-only."
       }
     }
   },
@@ -53,7 +54,7 @@
     "baseAuthorizations": [
       {
         "principalId": "[parameters('spObjectId')]",
-        "principalIdDisplayName": "SHIERTECH — Copilot spend (Cost Management Reader)",
+        "principalIdDisplayName": "SHIERTECH \u2014 Copilot spend (Cost Management Reader)",
         "roleDefinitionId": "[variables('costManagementReaderRoleDefinitionId')]"
       }
     ],
