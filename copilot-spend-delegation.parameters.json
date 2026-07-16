@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "mspOfferName": {
-      "value": "SHIERTECH — Copilot spend (Cost Management Reader)"
+      "value": "SHIERTECH \u2014 Copilot spend (Cost Management Reader)"
     },
     "mspOfferDescription": {
-      "value": "SHIERTECH — Copilot spend (Cost Management Reader)"
+      "value": "SHIERTECH \u2014 Copilot spend (Cost Management Reader)"
     },
     "spObjectId": {
-      "value": "00000000-0000-0000-0000-000000000000"
+      "value": "d22e0264-963f-4a12-a221-616d61a9f3ab"
     },
     "staffGroupObjectIds": {
       "value": []

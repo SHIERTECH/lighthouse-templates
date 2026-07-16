@@ -13,7 +13,7 @@ Grants SHIERTECH **Cost Management Reader** (read-only cost/billing data — no 
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FSHIERTECH%2Flighthouse-templates%2Fmain%2Fcopilot-spend-delegation.json)
 
-Sign in with an account that has **Owner** on the subscription, pick the subscription, and paste the `spObjectId` value SHIERTECH provides. Leave `staffGroupObjectIds` empty unless SHIERTECH asks otherwise.
+Sign in with an account that has **Owner** on the subscription, pick the subscription, and use `spObjectId` = `d22e0264-963f-4a12-a221-616d61a9f3ab` (SHIERTECH service principal — same value for every client). Leave `staffGroupObjectIds` empty unless SHIERTECH asks otherwise.
 
 ### Deploy (CLI)
 
@@ -21,7 +21,7 @@ Sign in with an account that has **Owner** on the subscription, pick the subscri
 az deployment sub create \
   --location eastus \
   --template-file copilot-spend-delegation.json \
-  --parameters spObjectId=<value-provided-by-SHIERTECH>
+  --parameters spObjectId=d22e0264-963f-4a12-a221-616d61a9f3ab
 ```
 
 ### Revoke (any time, client-side only)
